@@ -10,4 +10,4 @@ tags: til iOS Swift Codesquad
 - VendingMachine 객체를 ViewController 에서 AppDelegate 로 옮긴 후, ViewController 에서는 UIApplication 의 delegate 변수를 통해 접근하도록 수정했습니다.
 - VendingMachine 객체를 인코딩하기 위해, 관련 클래스 객체가 모두 NSSecureCoding 프로토콜을 채택하여 인코드, 디코드를 지원하도록 추가했습니다.
 - NSKeyedArchiver 와 NSKeyedUnarchiver 를 통해 자판기 객체를 Data 로 아카이브/언아카이브하고, UserDefaults 객체에 set/get 하도록 추가했습니다. 해당 기능을 담당하는 VendingMachineArchiver 구조체를 생성하여, AppDelegate 구현부에서 분리하였습니다.
-- 구현하면서 학습한 내용 및 실행화면 이미지를 [README][https://github.com/code-squad/swift-vendingmachineapp/tree/popsmile#3-%EC%95%B1-%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0%EC%99%80-%EA%B0%9D%EC%B2%B4-%EC%A0%80%EC%9E%A5] 에 정리했습니다.
+- 구현하면서 학습한 내용 및 실행화면 이미지를 [README](https://github.com/code-squad/swift-vendingmachineapp/tree/popsmile#3-%EC%95%B1-%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0%EC%99%80-%EA%B0%9D%EC%B2%B4-%EC%A0%80%EC%9E%A5) 에 정리했습니다.
