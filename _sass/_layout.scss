@@ -328,8 +328,8 @@ pre code.hljs {
 		.posts-list {
 			@extend %default-ul;
 			li {
-				padding: modular-scale(-4);
-				padding-left: 0;
+				// padding: modular-scale(-4);
+				padding: 0;
 			}
 			.desc {
 				font-size: 0.9em;
