@@ -17,7 +17,7 @@ cover:  "/assets/cover/pencil-clips-on-greenblue.jpeg"
 
 ### 자판기 앱 생명주기와 객체 저장
 
-앱 실행 이후 종료하고 재시작하더라도, 마지막 자판기 재고 상태와 잔액 등의 `VendingMachine` 객체의 속성이 저장/복원되도록 개선
+앱 실행 이후 종료하고 재시작하더라도, 마지막 자판기 재고 상태와 잔액 등의 `VendingMachine` 객체의 속성이 저장/복원되도록 개선.
 
 - **AppDelegate**
 
@@ -28,13 +28,13 @@ cover:  "/assets/cover/pencil-clips-on-greenblue.jpeg"
   - `VendingMachine` 객체 정보를 저장하기 위해, 내부에 포함된 구조체 및 클래스 객체가 모두 encodable and decodable 하도록 `NSSecureCoding` 프로토콜을 채택. 
   - 구조체는 `NSCoding` 프로토콜을 채택할 수 없기때문에, 처음에는 모든 객체가 `Codable` 프로토콜을 채택하도록 구현. 하지만 여러차례 시도에도, 이 프로토콜로는 객체 내부에 포함된 하위 객체의 정보까지 저장하는데 실패...😣
   - 모든 객체 클래스 변경 후, **`NSSecureCoding`** 프로토콜 채택.
-  - `NSKeyedArchiver` 와 `NSKeyedUnarchiver` 를 통해 자판기 객체를 Data 로 아카이브/언아카이브.
+  - `NSKeyedArchiver` 와 `NSKeyedUnarchiver` 를 통해 자판기 객체를 `Data` 로 아카이브/언아카이브.
 
 - **UserDefaults**
 
-  해당 클래스에 아카이브한 객체 데이터를 저장한다. 클래스 변수 `standard` 로 인스턴스 접근. 아래의 3가지 프로퍼티와 메소드를 추가 구현. 추가로 문자열인 키 값을 저장하고 있는 ` enum Keys` 도 각각 추가
+  해당 클래스에 아카이브한 객체 데이터를 저장. 클래스 변수 `standard` 로 인스턴스 접근. 아래의 3가지 프로퍼티와 메소드를 추가 구현. 추가로 문자열인 키 값을 저장하고 있는 ` enum Keys` 도 각각 추가.
 
-  {% highlight javascript %}
+  {% highlight swift %}
   static var supportsSecureCoding: Bool
   func encode(with aCoder: NSCoder) {}
   Required init?(coder aDecoder) {}
