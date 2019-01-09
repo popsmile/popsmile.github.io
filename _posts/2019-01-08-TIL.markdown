@@ -4,7 +4,7 @@ title:  "TIL: 2019.01.08"
 date:   2019-01-08 18:00:00
 author: Jamie
 categories: TIL
-tags: [TIL]
+tags: TIL
 cover:  "/assets/cover/pencil-clips-on-greenblue.jpeg"
 ---
 
