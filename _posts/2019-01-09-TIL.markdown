@@ -4,7 +4,7 @@ title:  "2019 첫번째 TIL"
 date:   2019-01-09 00:48:00
 author: Jamie
 categories: TIL
-tags: til iOS Swift Codesquad
+tags: TIL iOS Swift Codesquad
 cover:  "/assets/cover/til-background.jpg"
 ---
 
