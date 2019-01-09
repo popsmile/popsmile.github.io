@@ -43,24 +43,6 @@ highlightjs_theme: "github"
 #     category: '/category/:name/'
 #     tag: '/tag/:name/'
 
-collections:
-  tags:
-    output: true
-    permalink: /tags/:name/
-  categories:
-    output: true
-    permalink: /category/:name/
-defaults:
-  - scope:
-      path: ''
-      type: tags
-    values:
-      layout: archive
-  - scope:
-      path: ''
-      type: categories
-    values:
-      layout: archive
 
 # Disqus comments
 # disqus_shortname: bencentra
