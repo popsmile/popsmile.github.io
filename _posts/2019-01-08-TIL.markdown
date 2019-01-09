@@ -34,14 +34,14 @@ cover:  "/assets/cover/pencil-clips-on-greenblue.jpeg"
 
   해당 클래스에 아카이브한 객체 데이터를 저장. 클래스 변수 `standard` 로 인스턴스 접근. 아래의 3가지 프로퍼티와 메소드를 추가 구현. 추가로 문자열인 키 값을 저장하고 있는 ` enum Keys` 도 각각 추가.
 
-  ~~~ swift
-  static var supportsSecureCoding: Bool
-  func encode(with aCoder: NSCoder) {}
-  required init?(coder aDecoder: NSCoder) {}
-  ~~~
+{% highlight swift %}
+static var supportsSecureCoding: Bool
+func encode(with aCoder: NSCoder) {}
+required init?(coder aDecoder: NSCoder) {}
+{% endhighlight %}
 
-> **힘들었던 점**
->
-> 인코딩 과정에서 자꾸 `NSKeyedArchiver warning: replacing existing value for key '\(encodingKey)'; probable duplication of encoding keys in class hierarchy` 에러가 발생하여 헤맸다...😱 스위프트 깃허브에서 [해당 로그가 호출되는 부분](https://github.com/apple/swift-corelibs-foundation/blob/master/Foundation/NSKeyedArchiver.swift#L424)을 찾아보니, 인코딩 키 값이 이미 딕셔너리에 존재하는 키 값일 때 나타나는 에러였다. 모든 코드를 샅샅히 확인한 결과, `enum` 으로 키 값을 케이스별로 선언한 후, 하드 코딩 되어있던 키 값을 고치는 과정에서 두 번 중복하여 입력한 부분을 발견...!!👏🏻 작은 실수로 오랜 시간을 헤맸지만, `NSKeyedArchiver` 구현부를 확인하면서 더 자세히 들여다볼 수 있게해준 경험이었다.😆✨
+#### 힘들었던 점
+
+인코딩 과정에서 자꾸 `NSKeyedArchiver warning: replacing existing value for key '\(encodingKey)'; probable duplication of encoding keys in class hierarchy` 에러가 발생하여 헤맸다...😱 스위프트 깃허브에서 [해당 로그가 호출되는 부분](https://github.com/apple/swift-corelibs-foundation/blob/master/Foundation/NSKeyedArchiver.swift#L424)을 찾아보니, 인코딩 키 값이 이미 딕셔너리에 존재하는 키 값일 때 나타나는 에러였다. 모든 코드를 샅샅히 확인한 결과, `enum` 으로 키 값을 케이스별로 선언한 후, 하드 코딩 되어있던 키 값을 고치는 과정에서 두 번 중복하여 입력한 부분을 발견...!!👏🏻 작은 실수로 오랜 시간을 헤맸지만, `NSKeyedArchiver` 구현부를 확인하면서 더 자세히 들여다볼 수 있게해준 경험이었다.😆✨
 
 [정리 및 코드저장소 더 자세히 보기](https://github.com/code-squad/swift-vendingmachineapp/tree/popsmile#3-%EC%95%B1-%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0%EC%99%80-%EA%B0%9D%EC%B2%B4-%EC%A0%80%EC%9E%A5)
