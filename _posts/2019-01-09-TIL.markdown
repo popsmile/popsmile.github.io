@@ -1,14 +1,48 @@
 ---
 layout: post
 title:  "TIL: 2019.01.09"
-date:   2019-01-09 00:48:00
+date:   2019-01-09 21:48:00
 author: Jamie
 categories: TIL
-tags: TIL
+tags: Jekyll Singleton Architecture
 cover:  "/assets/cover/white-note.jpeg"
 ---
 
-- VendingMachine 객체를 ViewController 에서 AppDelegate 로 옮긴 후, ViewController 에서는 UIApplication 의 delegate 변수를 통해 접근하도록 수정했습니다.
-- VendingMachine 객체를 인코딩하기 위해, 관련 클래스 객체가 모두 NSSecureCoding 프로토콜을 채택하여 인코드, 디코드를 지원하도록 추가했습니다.
-- NSKeyedArchiver 와 NSKeyedUnarchiver 를 통해 자판기 객체를 Data 로 아카이브/언아카이브하고, UserDefaults 객체에 set/get 하도록 추가했습니다. 해당 기능을 담당하는 VendingMachineArchiver 구조체를 생성하여, AppDelegate 구현부에서 분리하였습니다.
-- 구현하면서 학습한 내용 및 실행화면 이미지를 [README](https://github.com/code-squad/swift-vendingmachineapp/tree/popsmile#3-%EC%95%B1-%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0%EC%99%80-%EA%B0%9D%EC%B2%B4-%EC%A0%80%EC%9E%A5) 에 정리했습니다.
+### Jekyll tags 메뉴 추가
+
+Github pages에서는 Jekyll-archives 플러그인을 지원안한다고 한다... 포스트에 적은 카테고리나 태그 링크 시에 계속 404 페이지로 랜딩되어서 조금 헤맸다. 그냥 상단 메뉴에 `Posts` 와 유사한 구조의 `Tags` 메뉴를 추가했다. 태그 CSS는 조금씩 꾸며봐야겠다.
+
+### Singleton이 무엇일까
+
+자판기 앱의 `VendingMachine` 클래스를 싱글톤 모델로 바꾸고자 한다. 싱글톤에 대해서 여기저기 찾아보았다. 잠들기 전에 [유튜브 영상](https://www.youtube.com/watch?v=yGjdgBXQbVQ&t=928s) 하나를 보고 간략하게 정리해보았다.
+
+- 인스턴스가 오로지 하나인 객체
+- 그래서 init() 메소드가 private이다.
+- 내부에서 생성초기화한 인스턴스를 static 프로퍼티로 선언해준다.
+- 외부 어디에서든 해당 인스턴스에 접근 가능 --> 이것이 싱글톤 목적이 되면 안된다고 한다!
+
+### Architecture
+
+ JK가 야밤볼꺼리(?)로 추천해주신 [Architecture + Clean Swift](https://tv.naver.com/v/4980400)를 시청했다. 
+
+- MVC
+
+  Model + View + Controller
+
+- MVP
+
+  Model + View + Presenter
+
+- MVVM
+
+  Model + View + ViewModel
+
+- VIPER
+
+  View + Interactor + Presenter + Entity + Router
+
+- Clean Swift
+
+  VIP: View + Interactor + Presenter
+
+각각 아키텍쳐는 담고있는 뷰, 비즈니스 등의 로직을 어떤 방식으로 나누느냐에 따라서 구분되는 듯 했다. 그 중에 Clean Swift의 경우에는, 나눈 부분이 서로를 순환해서 참조하고 있는 점이 특이했다. 
