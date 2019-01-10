@@ -4,7 +4,7 @@ title:  "ZIGZAG ADS"
 date:   2018-12-03 12:11:22
 author: Jamie & Cony
 categories: Codesquad
-tags: ZIGZAG CodeSquad App
+tags: ZIGZAG App
 cover:  "/assets/cover/pink-keyboard-mouse.jpeg"
 ---
 # 지그재그 ADS  
