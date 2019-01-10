@@ -8,14 +8,14 @@ tags: AppDelegate NSKeyedArchiver UserDefaults
 cover:  "/assets/cover/pencil-clips-on-greenblue.jpeg"
 ---
 
-### 블로그 만들기
+## 블로그 만들기
 
 - 마음에 드는 [Jekyll 테마](https://github.com/bencentra/centrarium) 발견!
 - 하루나 이틀 간격으로 TIL 작성 도전!
 
-<hr>
+<br>
 
-### 자판기 앱 생명주기와 객체 저장
+## 자판기 앱 생명주기와 객체 저장
 
 앱 실행 이후 종료하고 재시작하더라도, 마지막 자판기 재고 상태와 잔액 등의 `VendingMachine` 객체의 속성이 저장/복원되도록 개선.
 
@@ -40,7 +40,7 @@ func encode(with aCoder: NSCoder) {}
 required init?(coder aDecoder: NSCoder) {}
 {% endhighlight %}
 
-#### 힘들었던 점
+### 힘들었던 점
 
 인코딩 과정에서 자꾸 `NSKeyedArchiver warning: replacing existing value for key '\(encodingKey)'; probable duplication of encoding keys in class hierarchy` 에러가 발생하여 헤맸다...😱 스위프트 깃허브에서 [해당 로그가 호출되는 부분](https://github.com/apple/swift-corelibs-foundation/blob/master/Foundation/NSKeyedArchiver.swift#L424)을 찾아보니, 인코딩 키 값이 이미 딕셔너리에 존재하는 키 값일 때 나타나는 에러였다. 모든 코드를 샅샅히 확인한 결과, `enum` 으로 키 값을 케이스별로 선언한 후, 하드 코딩 되어있던 키 값을 고치는 과정에서 두 번 중복하여 입력한 부분을 발견...!!👏🏻 작은 실수로 오랜 시간을 헤맸지만, `NSKeyedArchiver` 구현부를 확인하면서 더 자세히 들여다볼 수 있게해준 경험이었다.😆✨
 

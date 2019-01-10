@@ -8,11 +8,13 @@ tags: Jekyll Singleton Architecture
 cover:  "/assets/cover/white-note.jpeg"
 ---
 
-### Jekyll tags 메뉴 추가
+## Jekyll tags 메뉴 추가
 
 Github pages에서는 Jekyll-archives 플러그인을 지원안한다고 한다... 포스트에 적은 카테고리나 태그 링크 시에 계속 404 페이지로 랜딩되어서 조금 헤맸다. 그냥 상단 메뉴에 `Posts` 와 유사한 구조의 `Tags` 메뉴를 추가했다. 태그 CSS는 조금씩 꾸며봐야겠다.
 
-### Singleton이 무엇일까
+<br>
+
+## Singleton이 무엇일까
 
 자판기 앱의 `VendingMachine` 클래스를 싱글톤 모델로 바꾸고자 한다. 싱글톤에 대해서 여기저기 찾아보았다. 잠들기 전에 [유튜브 영상](https://www.youtube.com/watch?v=yGjdgBXQbVQ&t=928s) 하나를 보고 간략하게 정리해보았다.
 
@@ -21,7 +23,9 @@ Github pages에서는 Jekyll-archives 플러그인을 지원안한다고 한다.
 - 내부에서 생성초기화한 인스턴스를 static 프로퍼티로 선언해준다.
 - 외부 어디에서든 해당 인스턴스에 접근 가능 --> 이것이 싱글톤 목적이 되면 안된다고 한다!
 
-### Architecture
+<br>
+
+## Architecture
 
  JK가 야밤볼꺼리(?)로 추천해주신 [Architecture + Clean Swift](https://tv.naver.com/v/4980400)를 시청했다. 
 
