@@ -20,7 +20,7 @@ cover:  "/assets/cover/finger-touches-iphone.jpeg"
 
 iOS 프로젝트에는 Main을 따로 만들어주지않아도 된다. Xcode가 자동으로 생성해준다!  `AppDelegate` 파일 내 상단에 있는 `@UIApplicationMain` 를 지우고 빌드해보면 아래와 같은 에러가 발생한다.
 
-<img src="https://popsmile.github.io/res/images/TIL/entry-point-defined.png"></img>
+<img src="https://popsmile.github.io/res/images/TIL/entry-point-defined.png">
 
 Entry Point를 찾지 못했다는 내용이다. 아래의 내용으로 Main.swift를 추가하면 실행된다. 이 부분을 수동으로 코딩하는 경우는 AppDelegate 자체를 테스트하거나의 상황을 제외하고는 거의 없다고 보면 된다.
 
@@ -47,7 +47,7 @@ func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView?
 
 `hitTest` 로 찾아낸 뷰가 바로 first responder가 된다. Next reponder는 이 뷰의 super view! 아래 이미지처럼 이벤트 포워딩 (responder chain)은 App delegate까지 모든 뷰 계층을 거쳐 진행된다.
 
-<img src="https://popsmile.github.io/res/images/TIL/responder-chain.png"></img>
+<img src="https://popsmile.github.io/res/images/TIL/responder-chain.png">
 
 [이미지출처](https://medium.com/ios-os-x-development/understanding-cocoa-and-cocoa-touch-responder-chain-12fe558ebe97)
 
