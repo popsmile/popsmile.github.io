@@ -25,24 +25,10 @@ Github pages에서는 Jekyll-archives 플러그인을 지원안한다고 한다.
 
  JK가 야밤볼꺼리(?)로 추천해주신 [Architecture + Clean Swift](https://tv.naver.com/v/4980400)를 시청했다. 
 
-- MVC
-
-  Model + View + Controller
-
-- MVP
-
-  Model + View + Presenter
-
-- MVVM
-
-  Model + View + ViewModel
-
-- VIPER
-
-  View + Interactor + Presenter + Entity + Router
-
-- Clean Swift
-
-  VIP: View + Interactor + Presenter
+- **MVC**: Model + View + Controller
+- **MVP**: Model + View + Presenter
+- **MVVM**: Model + View + ViewModel
+- **VIPER**: View + Interactor + Presenter + Entity + Router
+- **Clean Swift**: VIP - View + Interactor + Presenter
 
 각각 아키텍쳐는 담고있는 뷰, 비즈니스 등의 로직을 어떤 방식으로 나누느냐에 따라서 구분되는 듯 했다. 그 중에 Clean Swift의 경우에는, 나눈 부분이 서로를 순환해서 참조하고 있는 점이 특이했다. 
