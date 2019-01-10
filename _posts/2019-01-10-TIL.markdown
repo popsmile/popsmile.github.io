@@ -4,7 +4,7 @@ title:  "TIL: 2019.01.10"
 date:   2019-01-10 18:00:00
 author: Jamie
 categories: TIL
-tags: Singleton UIApplication HitTest ResponderChain Array LinkedListg
+tags: Singleton UIApplication HitTest ResponderChain Array LinkedList
 cover:  "/assets/cover/finger-touches-iphone.jpeg"
 ---
 
