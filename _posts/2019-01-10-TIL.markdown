@@ -1,0 +1,56 @@
+---
+layout: post
+title:  "TIL: 2019.01.10"
+date:   2019-01-10 18:00:00
+author: Jamie
+categories: TIL
+tags: Singleton UIApplication HitTest ResponderChain
+cover:  "/assets/cover/finger-touches-iphone.jpeg"
+---
+
+### Singleton 패턴 적용
+
+- 자판기 앱의 `VendingMachine` 객체에 싱글톤 패턴을 적용했다. 
+- 생성초기화 메소드를 모두 `private` 로 수정했다.
+-  `static` 프로퍼티로 `VendingMachine` 인스턴스를 선언해주었다. `VendingMachineArchiver` 로 이전에 아카이브해놨던 자판기 객체를 로드하는데 성공한다면, 로드한 객체 인스턴스를 반환. ` try` 과정에서 에러가 `throw` 되는 경우, 새로운 자판기 객체를 초기화생성하여 해당 인스턴스를 반환하도록 구현했다.
+
+[더 자세히 보기](https://github.com/code-squad/swift-vendingmachineapp/tree/popsmile#4-%EC%8B%B1%EA%B8%80%ED%86%A4-%EB%AA%A8%EB%8D%B8)
+
+###  UIAppication과 Main
+
+iOS 프로젝트에는 Main을 따로 만들어주지않아도 된다. Xcode가 자동으로 생성해준다!  `AppDelegate` 파일 내 상단에 있는 `@UIApplicationMain` 를 지우고 빌드해보면 아래와 같은 에러가 발생한다.
+
+<img href="https://popsmile.github.io/res/images/TIL/entry-point-defined.png"></img>
+
+Entry Point를 찾지 못했다는 내용이다. 아래의 내용으로 Main.swift를 추가하면 실행된다. 이 부분을 수동으로 코딩하는 경우는 AppDelegate 자체를 테스트하거나의 상황을 제외하고는 거의 없다고 보면 된다.
+
+{% highlight swift %}
+import UIKit
+
+UIApplicationMain(
+​	CommandLine.argc,
+​	CommandLine.unsafeArgv,
+​	NSStringFromClass(UIApplication.self),
+​	NSStringFromClass(AppDelegate.self)
+)
+{% endhighlight %}
+
+### Hit Test
+
+{% highlight swift %}
+func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView?
+{% endhighlight %}
+
+터치가 발생하면 `hitTest` 메소드를 통해 터치가 일어난 `CGPoint` 를 포함하는 뷰 계층에서 가장 깊은 뷰를 찾는다. 이 터치이벤트와 뷰는 연결된다. 이 뷰가 관련 모든 메소드를 받는다.
+
+### Responder Chain (이벤트 포워딩)
+
+`hitTest` 로 찾아낸 뷰가 바로 first responder가 된다. Next reponder는 이 뷰의 super view! 아래 이미지처럼 이벤트 포워딩 (responder chain)은 App delegate까지 모든 뷰 계층을 거쳐 진행된다.
+
+<img href="https://popsmile.github.io/res/images/TIL/responder-chain.png"></img>
+
+[이미지출처](https://medium.com/ios-os-x-development/understanding-cocoa-and-cocoa-touch-responder-chain-12fe558ebe97)
+
+- 스토리보드 이용하지않고, 코드로 view에서 first responder로 연결하는 방법
+
+  해당 뷰의 `target` 을 **`nil`** 로 명시하면, `sendAction(_:to:from:)` 메소드가 발생한 이벤트에 해당하는 `selector` 를 현재 first responder로 전달한다.
