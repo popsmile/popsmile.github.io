@@ -32,7 +32,7 @@ cover:  "/assets/cover/pencil-clips-on-greenblue.jpeg"
 
 - **UserDefaults**
 
-  해당 클래스에 아카이브한 객체 데이터를 저장. 클래스 변수 `standard` 로 인스턴스 접근. 아래의 3가지 프로퍼티와 메소드를 추가 구현. 추가로 문자열인 키 값을 저장하고 있는 ` enum Keys` 도 각각 추가.
+  해당 클래스에 아카이브한 객체 데이터를 저장. 클래스 변수 `standard` 로 인스턴스 접근. 아래의 3가지 프로퍼티와 메소드를 추가 구현. 추가로 문자열인 키 값을 저장하고 있는 `enum Keys` 도 각각 추가.
 
 {% highlight swift %}
 static var supportsSecureCoding: Bool
