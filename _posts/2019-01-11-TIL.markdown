@@ -1,0 +1,29 @@
+---
+layout: post
+title:  "TIL: 2019.01.11"
+date:   2019-01-11 16:00:00
+author: Jamie
+categories: TIL
+tags: Observer NotificationCenter
+cover:  "/assets/cover/book-with-magnifier.jpeg"
+---
+
+## Observer 패턴
+
+[관찰자 패턴](https://en.wikipedia.org/wiki/Observer_pattern)! 말 그대로 객체의 상태변화를 관찰하는 역할을 추가하는 것이다. 오늘은 `VendingMachie` 모델 객체와 `ViewController` 컨트롤러 객체 사이에 **NotificationCenter** 를 추가하여 이 Observer 패턴을 적용해보았다!
+
+<br>
+
+## NotificationCenter
+
+`Notification` 을 받고, 전달하는 중간 센터 역할의 객체. 싱글톤 객체라 `default` 변수로 인스턴스에 접근한다. 아래 이미지를 참고해서 크게 두 가지로 나누어 구현했다.
+
+**postNotification** 우선 자판기 객체의 `음료추가` `잔액추가` 액션을 `Notification` 으로 등록했다. `Notification.Name` 을 확장하여 추가해주었다. 그리고 각 액션이 일어나는 메소드에서 해당하는 노티를 **`NotificationCenter`** 로 포스트해주었다.
+
+**addObserver**  `ViewController` 를 방금 추가한 두 노티를 지켜보는 관찰자로 지정해주었다. `addObserver(_:selector:name:object:)` 메소드에서 `selector` 는 Objective-C 메소드를 선택하는 매개변수여서, 선택하고자 하는 메소드에 **@objc**를  붙여줘야한다.
+
+<img src="https://popsmile.github.io/res/images/TIL/observer-pattern.png">
+
+[이미지출처](https://codesquad.kr/)
+
+이렇게 Observer 패턴으로 Model과 Controller 가 **Loose Coupled(느슨하게 결합된)** 관계를 유지하게되면, 각각에서 변경사항이 생기더라도 서로에게 큰 영향을 미치지않고 상호작용할 수 있다는 장점이 있다.
