@@ -1,0 +1,61 @@
+---
+layout: post
+title:  "TIL: 2019.01.15"
+date:   2019-01-15 17:59:00
+author: Jamie
+categories: TIL
+tags: IndexPath DependencyInjection
+cover:  "/assets/cover/iphone-mac-on-woodtable.jpeg"
+---
+
+## 블로그 POST 타이틀 형식 수정
+
+TIL 포스트 타이틀을 날짜로 기록하다보니, 그 날에 어떤 내용을 학습했는지 Posts 메뉴에서는 확인할 수 없었다. TIL 포스트 글이 많아질수록 그 글에 어떤 내용이 담겼는지 알 수 있게 타이틀 형식을 바꾸는 게 좋을 듯 하여 바꾸어보았다. 날짜 옆에 각 포스트의 태그를 작은 폰트로 추가했다! 색상은 조금 더 고민해보아야겠다. 디자인 감각이 부족해서...😣
+
+<br>
+
+## IndexPath
+
+[UIKitCatalog 샘플](https://developer.apple.com/library/content/samplecode/UICatalog/Introduction/Intro.html) 프로젝트를 다운받아 소스를 여기저기 살펴보며 분석해보았다. 프로젝트 루트 뷰 컨트롤러는 `UITableViewController` 로 구성되어 있었다. 중간중간 `IndexPath` 객체가 자주 등장해서 따로 찾아보았다. [애플 공식 문서](https://developer.apple.com/documentation/foundation/indexpath)에서는 아래와 같이 설명되어있다.
+
+**A list of indexes that together represent the path to a specific location in a tree of nested arrays.** Each index in an index path represents the index into an array of children from one node in the tree to another, deeper, node.
+
+여러 인덱스가 있는 리스트로, 중첩된 배열에서 특정 요소를 나타내는 경로 역할을 한다. 이 정도로 해석을 하고 받아들였는데, 막상 확 와닿지는 않았다. [Cocoa Internals](https://book.naver.com/bookdb/book_detail.nhn?bid=11491848)의 중첩된 배열 페이지 첫 그림을 보는데, 무언가 아하! 하고 조금은 와닿았다. 트리 구조 이미지를 떠올리면서, 외부에서 중첩된 배열의 요소를 접근하기 위해 깊게 찾아가는 경로의 역할이라고 생각했다. 무조건은 아니지만, `TableView` 에서 자주 쓰이는 것으로 보인다. 이 프로젝트를 조금 더 자세히 분석해보면서 직접 활용해보아야겠다.
+
+<br>
+
+## Dependency Injection
+
+`ViewController` 에서 싱글톤 객체인 `VendingMachine` 의 인스턴스를 직접 참조하는 것에 대해 **의존성 주입** 피드백을 받았다. [Swift dependency injection design pattern](https://theswiftdev.com/2018/07/17/swift-dependency-injection-design-pattern/) 포스트를 읽고 의존성 주입이 무언인지와 자판기 앱 개선 방법에 대해 고민해보았다.
+
+#### 의존성
+
+객체 A와 객체 B가 있다고 가정해보자. 객체 A에서 객체 B를 사용하고자 한다. 이게 바로 의존성이 생기는 시점이다. 여기서 만약 객체 A 내부에 객체 B를 직접 하드코딩하여 사용한다면, 이후에 객체 A는 객체 B 없이 사용할 수 없기 때문에 좋지 않은 선택이다.
+
+#### 디커플링
+
+따라서, 최대한 독립적인(의존적이지 않은) 객체를 만드는 것이 중요하다. 느슨하게 결합된(loosely coupled) 코드, 디커플링이라고 부르기도 한다. 디커플링은 객체가 재사용될 수 있게 해주고, 테스트하기 쉽게 해준다.
+
+아래는 의존성을 주입하는 방법의 종류이다.
+
+- Constructor Injection
+
+  객체 A 생성자 매개변수로 객체 B를 넘겨주기
+
+- Property Injection
+
+  객체 A 외부에서 프로퍼티로 접근하여 객체 B 설정해주기
+
+- Method Injection
+
+  객체 B가 사용되는 객체 A 메소드에 매개변수로 넘겨주기 
+
+필자가 마지막에 언급한 방법은 프로퍼티 인젝션에서 세터 역할의 메소드로 대체한 것 같은데, 제대로 이해를 하지 못했다. 
+
+현재는 자판기 앱  `ViewController` 내부에서 접근하던 `VendingMachine.shared` 부분을 삭제하고, `AppDelegate` `application()` 메소드에서 자판기 객체 인스턴스를 전달해주는 것으로 개선했다. 내일 [다른 자료](http://ilya.puchka.me/dependency-injection-in-swift/)도 조금 더 읽고 정리한 후에, 어떻게 더 개선할지 고민해보아야겠다.
+
+<br>
+
+## 하루 마무리
+
+오늘은 컨디션이 좋지 않아서 집중도 잘 안되고 정신이 없었던 것 같다...😥 그래도 수고했다! 내일도 화이팅!
