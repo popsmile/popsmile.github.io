@@ -38,17 +38,9 @@ TIL 포스트 타이틀을 날짜로 기록하다보니, 그 날에 어떤 내�
 
 아래는 의존성을 주입하는 방법의 종류이다.
 
-- Constructor Injection
-
-  객체 A 생성자 매개변수로 객체 B를 넘겨주기
-
-- Property Injection
-
-  객체 A 외부에서 프로퍼티로 접근하여 객체 B 설정해주기
-
-- Method Injection
-
-  객체 B가 사용되는 객체 A 메소드에 매개변수로 넘겨주기 
+- Constructor Injectio: 객체 A 생성자 매개변수로 객체 B를 넘겨주기
+- Property Injection: 객체 A 외부에서 프로퍼티로 접근하여 객체 B 설정해주기
+- Method Injection: 객체 B가 사용되는 객체 A 메소드에 매개변수로 넘겨주기 
 
 필자가 마지막에 언급한 방법은 프로퍼티 인젝션에서 세터 역할의 메소드로 대체한 것 같은데, 제대로 이해를 하지 못했다. 
 
