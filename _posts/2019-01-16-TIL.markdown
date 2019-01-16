@@ -1,0 +1,67 @@
+---
+layout: post
+title:  "TIL: 2019.01.16"
+date:   2019-01-16 17:59:00
+author: Jamie
+categories: TIL
+tags: Django Inspectdb
+cover:  "/assets/cover/white-note.jpeg"
+---
+
+## Multiple Databases in Django
+
+챗봇 프로젝트 서버에 외부 데이터베이스를 추가로 연결했다. 장고에서는 간단한 설정만으로 [멀티 데이터베이스](https://docs.djangoproject.com/ko/2.1/topics/db/multi-db/)를 가능하게 지원해준다! 프로젝트 `settings.py` 파일에 아래와 같이 데이터베이스 설정을 추가해주면된다. `default` 데이터베이스는 사용할 데이터베이스가 지정되지 않았을 때 기본으로 사용된다. 아래에 `extra` 로 추가한 별칭은 임의로 설정이 가능하다.
+
+```python
+# settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '...',
+        'USER': '...',
+        'PASSWORD': '...',
+        'HOST': '...',
+        'PORT': '5432',
+    },
+    'extra': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': '...',
+        'USER': '...',
+        'PASSWORD': '...',
+        'HOST': '...',
+        'PORT': '3306',
+    }
+}
+```
+
+하지만, 라우팅은 직접 추가해야한다. 라우터 클래스를 직접 추가해서, 아래와 같은 함수를 구현해주었다.
+
+```python
+class DatabaseRouter:
+    def db_for_read(self, model, **hints):
+        if model._meta.app_label == '앱이름':
+            return 'extra'
+        return 'default'
+
+    def db_for_write(self, model, **hints):
+        if model._meta.app_label == '앱이름':
+            return 'extra'
+        return 'default'
+
+    def allow_migrate(self, db, app_label, model_name=None, **hints):
+        if app_label == '앱이름':
+            return db == 'extra'
+        return None
+```
+
+ `db_for` 로 시작하는 두 함수는 모델의 `_meta.app_label` 이 어떤 앱인지에 따라 해당하는 DB 별칭을 리턴한다. 마지막 함수에서는 특정 앱이 어떤 DB와 `migrate` 할지 지정해준다.
+
+### Inspectdb
+
+외부 데이터베이스를 추가하면서 정말 감탄했던 장고 기능 중 하나..! `inspectdb` 기능으로 기존 데이터베이스의 테이블을 토대로 대응하는 모델 클래스를 자동으로 생성해준다. 다만, 장고에서 해당 모델 생명주기를 직접 관리하고싶다면 `managed` 옵션을 `True` 로 변경해주어야한다.  [Integrating Django with a legacy database](https://docs.djangoproject.com/en/2.1/howto/legacy-databases/) 를 참고하였다.
+
+```
+$ python manage.py inspectdb > 'models.py' --database 'extra'
+```
+
+<br>
