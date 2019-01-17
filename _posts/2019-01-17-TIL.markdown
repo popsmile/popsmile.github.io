@@ -1,0 +1,64 @@
+---
+layout: post
+title:  "TIL: 2019.01.17"
+date:   2019-01-17 17:59:00
+author: Jamie
+categories: TIL
+tags: Copying KeyedArchiver
+cover:  "/assets/cover/pink-keyboard-mouse.jpeg"
+---
+
+## 자판기 앱 관리자모드 분리
+
+자판기 앱의 관리자모드 화면을 구성하기 위해, `AdminViewController` 를 새로 생성하여 추가했다. 기존 뷰 컨트롤러는 `UserViewController` 로 명명했다. 뷰 컨트롤러에서 사용할 `VendingMachine` 객체으 타입은 각각 이전에 만들어놓은 `UserMode` , `AdminMode` 프로토콜로 지정해주었다. ~~이 프로토콜의 원래 이름은 Consumer , Manager 였다...~~
+
+사용자모드 화면에 `Info Light` 타입의 버튼을 추가하고, `Present Modally`  Segue로 관리자모드에 연결해주었다. 관리자모드에는 `닫기`  버튼으로 뷰 컨트롤러를 `dismiss()` 할 수 있게 추가해주었다.
+
+요근래 굉장히 [고민하던 문제](https://github.com/code-squad/swift-vendingmachineapp/pull/126#discussion_r248151316)가 있었는데, 자판기 앱이 시작되고 처음에 잔액/재고 데이터를 레이블에 어떤 방식으로 반영해줄 것이냐였다. JK의 피드백을 참고하면, 자판기 객체가 초기화되어 인스턴스화된 시점에서부터 내부 데이터가 반영되는 시점을 따로 분리하여 뒤로 미루는 것이었다. 그 시점 사이에 뷰 컨트롤러가 관찰자로 등록되기 때문에, 데이터가 반영되는 시점에 자판기 객체에서 관련 노티피케이션 포스트를 보내면, 뷰 컨트롤러에서 따로 호출하는 부분 없이 레이블이 업데이트 될 수 있다는 이야기였다.
+
+하지만, 현재 자판기 객체 인스턴스를 `AppDelegate` 가 `application()` 메소드에서  `UserViewController` 로 넘겨주기 때문에 `AppDelegate` 가 자판기 객체의 인스턴스에 가장 먼저 접근한다. 따라서, 뷰 컨트롤러가 관찰자로 등록되기 전에 이미 자판기 객체의 데이터가 반영된 상태라 위와 같이 시점을 늦출 수 없는 상황이었다. 😣 이번에 받은 피드백을 기억하면서 이후에는 **모델 객체 생성, 옵저버 등록, 노티피케이션 포스트, 핸들러 처리가 시간 순서대로 흘러갈 수 있는지**를 항상 체크하면서 설계해야겠다.
+
+<br>
+
+## Copying
+
+### 얕은 복사
+
+클래스가 중첩되어있을 때, 바깥의 클래스만 복사되고 안의 클래스는 같은 참조를 갖게되는 것을 얕은 복사라고 한다.
+
+```swift
+var dataArray3: NSMutableArray = [
+    NSMutableString(string: "one"),
+    NSMutableString(string: "two"),
+    NSMutableString(string: "three"),
+]
+
+dataArray4 = dataArray3.mutableCopy() as! NSMutableArray
+```
+
+위의 dataArray3는 `NSMutableArray` 클래스 안에 `NSMutablString` 클래스가 중첩되어있다. 이 배열을 복사한 dataArray4는 **얕은 복사**가 되어, 아래의 이미지와 같이 내부 중첩된 클래스는 같은 참조를 가지고 있다! 
+
+<img src="https://popsmile.github.io/res/images/TIL/shallow-copy.png">
+
+[이미지출처](https://codesquad.kr/)
+
+```swift
+var stringItem = dataArray3[0] as! NSMutableString
+stringItem.append("Added!")
+```
+
+그래서 dataArray3의 0 인덱스 요소를 수정해도 같은 참조를 갖고있기 때문에, 두 배열을 출력해보면 아래와 같이 **같은** 결과가 나온다.
+
+```
+(
+    "oneAdded!",
+    two,
+    three
+)
+```
+
+### 깊은 복사
+
+깊은 복사는 얕은 복사와 달리 중첩되거나 포함된 안의 클래스도 모두 복사하는 것을 말한다. 하지만, 복잡한 객체 참조관계를 모두 복사하는 것은 꽤 복잡한 일이기 때문에 꼭 필요한지 생각해봐야한다. 
+
+**KeyedArchiver**는 상위 객체에서부터 차례차례 탐색하며 아카이브하여 깊은 복사를 가능하게 해준다. 하지만, 순환하여 참조한다거나 다른 객체와의 관계가 너무 복잡한 경우에는 KeyedArchiver로도 완전한 깊은 복사가 이루어지지 않을 수도 있다. 현재 내가 진행 중인 자판기 앱의 `VendingMachie` 객체의 경우 내부에 객체 포함관계가 순차적이고 명확하기때문에 이 KeyedArchiver로 깊은 복사가 가능했다..!
