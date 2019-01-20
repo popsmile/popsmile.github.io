@@ -1,0 +1,125 @@
+---
+layout: post
+title:  "TIL: 2019.01.20"
+date:   2019-01-20 22:59:00
+author: Jamie
+categories: TIL
+tags: Node LinkedList discardableResult
+cover:  "/assets/cover/number-one-chain.jpeg"
+---
+
+**LinkedList** 자료구조를 스위프트로 구현해보았다. ([Raywenderlich](https://www.raywenderlich.com/)를 참고하였다.)
+
+<img src="https://popsmile.github.io/res/images/TIL/single-linked-list.png">
+
+[이미지출처](https://ko.wikipedia.org/wiki/%EC%97%B0%EA%B2%B0_%EB%A6%AC%EC%8A%A4%ED%8A%B8#/media/File:Single_linked_list.png)
+
+<br>
+
+## Node
+
+위 다이아그램에서 보듯이, LinkedList는 **Node**가 연결된 체인이다. Node는 두 가지를 가지고 있다.
+
+- **Value**, 값.
+- **Reference** to the **next node**, 다음 노드의 주소. (nil이면 리스트의 끝을 의미)
+
+```swift
+public class Node<Value> {
+    public var value: Value
+    public var next: Node?
+
+    public init(value: Value, next: Node? = nil) {
+        self.value = value
+        self.next = next
+    }
+}
+```
+
+<br>
+
+## LinkedList
+
+LinkedList는 Node 타입인 **head**와 **tail**을 가지고있다. 각각 리스트의 시작과 끝 노드를 가리킨다.
+
+```swift
+public struct LinkedList<Value> {
+    public var head: Node<Value>?
+    public var tail: Node<Value>?
+
+    public init() { }
+
+    public var isEmpty: Bool {
+        return head == nil
+    }
+}
+```
+
+### 리스트에 값 추가
+
+1. **push**
+
+리스트 **앞**에 추가하는 메소드. 기존 `head`를 `next` 노드로 갖는 새로운 노드를 생성해서 `head` 로 지정해준다. 만약 비어있던 리스트라면 처음 push한 노드가 `head`인 동시에 `tail` 이도록  지정해준다.
+
+```swift
+public mutating func push(_ value: Value) {
+    head = Node(value: value, next: head)
+    if tail == nil {
+        tail = head
+    }
+}
+```
+
+2. **append**
+
+리스트 **끝**에 추가하는 메소드. 빈 리스트의 경우, 위의 push 메소드로 처리한다. 비어있지 않은 리스트라면, 현재 `tail` 인 노드를 수정해줘야한다. `tail` 역할의 노드는 다음 노드를 가리키는 `next` 가 `nil` 인데, 이 값을 새로 추가한 노드로 업데이트해준다. 새로 추가한 노드는 `value` 값으로만 초기화했으니, `next` 가 디폴트 값으로 `nil` 이다. 그리고 이 노드를 `tail` 노드로 지정해준다.
+
+```swift
+public mutating func append(_ value: Value) {
+    if isEmpty {
+        push(value)
+        return
+    }
+    tail?.next = Node(value: value)
+    tail = tail?.next
+}
+```
+
+3. **insert(after: )**
+
+**특정 노드 뒤**에 추가하는 메소드. 그럴려면 우선 리스트에서 특정 노드를 찾을 수 있어야한다. 리스트를 iterate하면서 `index` 값으로 특정 노드를 찾는다.
+
+이렇게 찾은 노드의 **뒤**에 추가하려면, 이 `특정 노드 A`와 `A의 next인 노드 B` 사이에 `새로 추가한 노드 C`가 들어가야한다. 
+
+- A.next = B
+- B.next = C
+
+만약 A가 `tail` 이었다면, 리스트 끝에 추가해주는 append 메소드로 처리해준다.
+
+```swift
+public func node(at index: Int) -> Node<Value>? {
+    var currentNode = head
+    var currentIndex = 0
+    while currentNode != nil && currentIndex < index {
+        currentNode = currentNode!.next
+        currentIndex += 1
+    }
+    return currentNode
+}
+
+@discardableResult
+public mutating func insert(_ value: Value, after node: Node<Value>) -> Node<Value> {
+    guard tail !== node else {
+        append(value)
+        return tail!
+    }
+    node.next = Node(value: value, next: node.next)
+    return node.next!
+}
+```
+
+<br>
+
+## @discardableResult
+
+위 insert 메소드에 붙어있는 **`@discardableResult`** attribute는 메소드가 반환하는 값을 사용하지 않더라도, 컴파일러에서 경고하지 않도록 해준다. [Swift docs 참고](https://docs.swift.org/swift-book/ReferenceManual/Attributes.html)
+
