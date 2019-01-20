@@ -1,0 +1,37 @@
+---
+layout: post
+title:  "TIL: 2019.01.18"
+date:   2019-01-18 17:59:00
+author: Jamie
+categories: TIL
+tags: TayasuiSketches App ViewHierarchy
+cover:  "/assets/cover/imac-ipad-on-woodtable.jpeg"
+---
+
+## Tayasui Sketches 앱으로 이미지 만들기
+
+아이패드에서 [Tayasui Sketches](https://itunes.apple.com/us/app/tayasui-sketches/id641900855#?platform=ipad) 라는 앱으로 자판기 앱에 들어갈 자판기 이미지를 만들어보았다! 디자인 감각이 많이 부족하지만... 그걸 커버해줄 수 있을 정도의 굉장한 앱이었다. 😆 제잉이 빌려주신 아이패드와 애플펜슬을 가지고 `자` 와 `마커` 툴을 활용해서 아래의 자판기를 그려보았다.
+
+<img src="https://popsmile.github.io/res/images/TIL/tayasui-sketches.jpeg">
+
+<br>
+
+## 뷰 계층 순서 조정하기
+
+위 이미지를 자판기 앱의 사용자모드 뷰에 배경이미지로 사용하고자 `ImageView` 를 하나 추가했다. 이 이미지 뷰를 기존의 모든 뷰보다 뒤에 위치하게하는 방법을 `zPosition` 등 여러 가지로 찾아보았었다...~~(바보같이)~~ [이 글](https://stackoverflow.com/questions/39319811/set-background-image-in-storyboard)과 메이슨의 도움으로 스토리보드에서 뷰 계층 순서를 조정하는 방법을 알게되었다.
+
+<img src="https://popsmile.github.io/res/images/TIL/view-hierarchy-in-storyboard.png">
+
+위 이미지를 보면 스토리보드 왼쪽에 있는 목록이 바로 뷰 계층 구조이다. 스토리보드에서 새롭게 추가한 뷰는 이 목록의 가장 아래에 추가되는데, 위에 있을수록 상위 뷰로 화면 상에서 뒤에 나타나게 된다. 따라서 추가한 이미지뷰를 다른 뷰보다 상위 계층으로 조정해주었다. 
+
+자판기 앱에 정말 음료가 진열되어 있는 것처럼 보여주기 위해서, 음료 이미지 작업도 추가로 진행했다. 흥푸가 포토샵으로 기존 음료 이미지의 흰 배경으로 투명배경 이미지로 작업해주셨다...! 금손 흥푸👏🏻✨ 아래 이미지는 이렇게 적용한 실행 결과이다!
+
+<img src="https://popsmile.github.io/res/images/TIL/vendingmachine-with-background.png">
+
+<br>
+
+### 오늘의 감사드릴 분들
+
+- 제잉: 아이패드와 펜슬 잘 썼어요. 감사합니다. 😊
+- 흥푸: 만능 갓흥푸의 포토샵 실력으로 제 자판기 앱의 완성도가 높아졌습니다. 감사합니다. 😊
+- 메이슨: 매번 메이슨의 힌트와 도움 감사합니다. 😊
