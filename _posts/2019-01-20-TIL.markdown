@@ -56,7 +56,7 @@ public struct LinkedList<Value> {
 
 ### 리스트에 값 추가
 
-1. **push**
+#### push
 
 리스트 **앞**에 추가하는 메소드. 기존 `head`를 `next` 노드로 갖는 새로운 노드를 생성해서 `head` 로 지정해준다. 만약 비어있던 리스트라면 처음 push한 노드가 `head`인 동시에 `tail` 이도록  지정해준다.
 
@@ -69,7 +69,7 @@ public mutating func push(_ value: Value) {
 }
 ```
 
-2. **append**
+#### append
 
 리스트 **끝**에 추가하는 메소드. 빈 리스트의 경우, 위의 push 메소드로 처리한다. 비어있지 않은 리스트라면, 현재 `tail` 인 노드를 수정해줘야한다. `tail` 역할의 노드는 다음 노드를 가리키는 `next` 가 `nil` 인데, 이 값을 새로 추가한 노드로 업데이트해준다. 새로 추가한 노드는 `value` 값으로만 초기화했으니, `next` 가 디폴트 값으로 `nil` 이다. 그리고 이 노드를 `tail` 노드로 지정해준다.
 
@@ -84,7 +84,7 @@ public mutating func append(_ value: Value) {
 }
 ```
 
-3. **insert(after: )**
+#### insert(after: )
 
 **특정 노드 뒤**에 추가하는 메소드. 그럴려면 우선 리스트에서 특정 노드를 찾을 수 있어야한다. 리스트를 iterate하면서 `index` 값으로 특정 노드를 찾는다.
 
