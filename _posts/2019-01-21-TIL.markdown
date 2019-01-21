@@ -1,0 +1,56 @@
+---
+layout: post
+title:  "TIL: 2019.01.21"
+date:   2019-01-21 18:00:00
+author: Jamie
+categories: TIL
+tags: UIBezierPath Frame Bounds reduce
+cover:  "/assets/cover/piegraph-in-tablet.jpeg"
+---
+
+## UIBezierPath
+
+자판기 앱 관리자 화면에서 구매 이력을 바탕으로 구매 음료 종류 비율 그래프를 추가해주었다. `UIView` 를 상속받는 `PieGraphView` 커스텀 뷰를 생성하고, `draw()` 메소드에서 이 UIBezierPath를 활용해서 그래프를 그려보았다. 
+
+[UIBezierPath](https://developer.apple.com/documentation/uikit/uibezierpath)는 직선이나 곡선으로 이루어진 **path**를 그려주는 클래스이다. 이 클래스의 생성자 중 호 path를 만들어주는 것을 사용했다.
+
+```swfit
+UIBezierPath.init(arcCenter: CGPoint,
+             	  radius: CGFloat,
+             	  startAngle: CGFloat,
+             	  endAngle: CGFloat,
+             	  clockwise: Bool)
+```
+
+이렇게 만든 path에 `addLine(to: CGPoint)` 로 원점까지 선을 그려주고, `fill()` 메소드로 현재 지정된 fill color로 색도 칠해주었다. 현재 fill color는 `UIColor.setFill()` 로 지정한다. 아래는 실행 결과이다..! 그래프 팔레트는 수정해주어야겠다 ㅎㅎ
+
+<img src="https://popsmile.github.io/res/images/TIL/piegraph-vendingmachine.png">
+
+<br>
+
+## Frame & Bounds
+
+파이 그래프를 그려주면서 `UIView` 의 **frame**과 **Bounds**의 차이점을 알게되었다. 둘 모두 `CGRect` 타입이고, 뷰의 위치와 사이즈를 다룬다. 차이점은 기준으로 사용하는 **좌표 시스템**이다.
+
+- **frame** : 자신의 **수퍼 뷰** 좌표 시스템을 기준. 따라서, 해당 뷰를 수퍼 뷰 기준으로 어디에 위치할 것인지와 사이즈를 결정할 때 사용한다.
+- **bounds** : 자기 자신의 뷰 좌표 시스템을 기준. 디폴트 사이즈 값은 **frame** 의 사이즈 값과 동일하다. 파이 그래프를 그려줄 때 필요한 원점과 반지름 값을 주기위해, 이 값을 활용해주었다! (어짜피 디폴트 값은 frame값과 동일하지만...뭐)
+
+<br>
+
+## reduce(into:_:)
+
+파이 그래프를 그려줄 때 사용하는 데이터로 딕셔너리를 사용하는데, `[Beverage]` 를 딕셔너리로 만들어줄 때 이 메소드를 사용해보았다!
+
+```swift
+func reduce<Result>(into initialResult: Result, _ updateAccumulatingResult: (inout Result, Element) throws -> ()) rethrows -> Result
+```
+
+제네릭 메소드로, `initialResult` 에 reduce해서 얻고싶은 결과 값을 넣어준다. `updateAccumulatingResult` 에는 클로저로 Result에 어떻게 값을 넣어줄지 선언해준다. 이 메소드로 아래와 같이 필요한 딕셔너리 값을 만들어주었다.
+
+```swift
+private var classifiedPurchase: [String: Int] {
+    return purchases.reduce(into: [:]) { $0[$1.title, default: 0] += 1 }
+}
+```
+
+또, 추가로 알게된 문법은 [subscript(_:default:)](https://developer.apple.com/documentation/swift/dictionary/2894528-subscript) 이다. 딕셔너리에서 key로 value를 찾을 때, 만약 해당 key가 없다면 반환해줄 디폴트 값을 이렇게 지정해놓을 수 있다. 이전에는 `dict[key] = dict[key] ?? default + something` 이렇게 했었는데...🙄 저 문법을 쓰니 훨씬 가독성이 좋아진 것 같다. 👏🏻
