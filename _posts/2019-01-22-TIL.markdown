@@ -1,0 +1,55 @@
+---
+layout: post
+title:  "TIL: 2019.01.22"
+date:   2019-01-22 23:59:59
+author: Jamie
+categories: TIL
+tags: DataSource TouchEvent ShakeMotion
+cover:  "/assets/cover/finger-touches-iphone.jpeg"
+---
+
+## DataSource
+
+[JK의 피드백](https://github.com/code-squad/swift-vendingmachineapp/pull/132#discussion_r249620052)으로 **데이터소스** 역할에 대해서 다시 한 번 더 생각하게되었다.
+
+DataSource 프로토콜을 만든 이유는 뷰가 다루는 데이터를 담당하는 역할을 따로 두기 위해서이다. 따라서 뷰는 최소한의 데이터만 가지고 있고, 뷰에 그려야할 데이터를 바로 이 DataSource 에서 관리해줘야하는 것이다.
+
+이 내용을 바탕으로 `PieGraphView` 내부에 있던 `[Beverage]`  프로퍼티를, 이 뷰의 데이터소스 역할을 담당할 `AdminViewController` 내부로 옮겨주었다. 그리고 이 프로퍼티가 업데이트되면 그래프 뷰에 `setNeedsDisplay()` 메소드를 호출해주어 이 데이터를 바탕으로 다시 그리도록 수정하였다!
+
+<br>
+
+## Touch Event & Shake Motion
+
+자판기 앱 관리자 화면 파이 그래프에 아래의 터치 이벤트와 모션 이벤트를 적용시켜보았다.
+
+- 그래프를 터치하면 검정색 동그라미 그래프가 그려지도록.
+- 그래프를 터치한 상태로 손가락을 움직일 때, 그 방향으로 그래프 사이즈가 재조정되도록.
+- 그래프에서 손가락을 떼면, 현재 사이즈로 그래프 색상이 바뀌어서 구매이력 그래프가 다시 그려지도록.
+- 그래프 사이즈가 제한한 최대/최소 범위를 벗어나지않도록.
+- shake 모션이 일어나면, 기존 그래프의 사이즈로 복구하도록.
+
+```swift
+class PieGraphView: UIView {
+    private var touched: Bool = false
+    ...
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        if touched {
+            drawDefaultCircle()
+        } else {
+            drawPieGraph()
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) { ... }
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) { ... }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) { ... }
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) { ... }
+    ...
+}
+```
+
+터치 이벤트 메소드를 오버라이드하고, 각각의 동작 이후 **draw(rect:)** 메소드를 직접 호출하지 않고 **setNeedsDisplay()** 메소드를 호출해주었다. `draw(rect:)` 메소드는 절대 직접 호출하여 사용하지 않고, [setNeedsDisplay()](https://developer.apple.com/documentation/uikit/uiview/1622437-setneedsdisplay) 메소드를 통해 호출되도록 구현해야한다...! [Swift docs 참고](https://developer.apple.com/documentation/uikit/uiview/1622529-draw) 모션 이벤트는  `AdminViewController` 에서 `motionEnded()` 메소드를 오버라이드하여 추가했다.
+
+<img src="https://popsmile.github.io/res/images/TIL/piegraph-touchevent.gif">
+
