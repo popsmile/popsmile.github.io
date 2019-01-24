@@ -4,7 +4,7 @@ title:  "TIL: 2019.01.23"
 date:   2019-01-23 23:59:59
 author: Jamie
 categories: TIL
-tags: Base64 BitwiseOperation
+tags: Python Base64 Algorithm BitwiseOperation
 cover:  "/assets/cover/pokercards.jpeg"
 ---
 
@@ -33,7 +33,7 @@ Base64는 바이너리 데이터를 화면에 표시할 수 있는 아스키 문
 
 ## 비트 연산 (Bitwise Operation)
 
-프로그래머스에서 카카오 코딩테스트 기출문제인 [비밀지도](https://programmers.co.kr/learn/courses/30/lessons/17681) 문제를 풀어보았다. 이 문제는 **비트 연산**으로 접근해야하는 문제이다. ~~(접근 방법... 유튜브에서 힌트를 얻었다...)~~ 
+프로그래머스에서 카카오 코딩테스트 기출문제인 [비밀지도](https://programmers.co.kr/learn/courses/30/lessons/17681?language=swift) 문제를 풀어보았다. 이 문제는 **비트 연산**으로 접근해야하는 문제이다. ~~(접근 방법... 유튜브에서 힌트를 얻었다...)~~ 
 
 ```swift
 func solution(_ n:Int, _ arr1:[Int], _ arr2:[Int]) -> [String] {

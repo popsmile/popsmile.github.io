@@ -1,0 +1,49 @@
+---
+layout: post
+title:  "TIL: 2019.01.24"
+date:   2019-01-24 23:59:59
+author: Jamie
+categories: TIL
+tags: MVVM Algorithm RegularExpression
+cover:  "/assets/cover/yellow-memo-on-woodtable.jpeg"
+---
+
+오늘 받은 피드백 중 기억해야할 내용 하나, 커스텀 뷰 생성시에는 만약 초기 설정을 해주는 메소드가 있다면 `required init?(coder aDecoder: NSCoder)` 과 다른 생성자에 모두 같은 내용을 적용해줘야한다는 점이다. 왜냐하면, 뷰를 코드로 생성하든 인터페이스 빌더에서 생성하든 동일하게 동작해야하기 때문이다..!!
+
+또, Xcode 디버깅 관련 피드백 강의에서 **LLDB**와 **Chisel** 디버거 명령어를 살펴보았다. 평소에 브레이크포인트를 걸고 디버깅하는 연습을 자주 시도하고있지만, 사실 아직까지 LLDB와 Chisel 같은 디버거 명령어를 직접 적극적으로 활용해본 적은 없다. 
+
+오늘 봤던 명령어 중에서, 뷰를 이미지로 만들어서 보여주는 **visualize**와 특정 뷰에 색상 테두리를 입혀서 보여주는 **border --color**가 인상깊었다. 카드게임 앱 진행하면서 뷰 계층을 확인할 때, 한 번씩 시도해보아야겠다.
+
+<br>
+
+## MVVM 패턴이 무엇일까?
+
+무언가 정말로 갑자기 **MVVM** 패턴에 관심이 생겼다. 뭔가 카드게임 앱을 진행하면서 뷰 컨트롤러가 너무 할 일이 많아지는 것 같다고 느꼈던 탓인가... 누군가는 **MVC**를 Massive View Controller라고 부른다는 글도 본 적이 있는 것 같다.
+
+두 패턴에 대해서 조금 더 찾아보니 iOS 앱 구조에는 MVVM 패턴이 더 적절하다는 의견이 많았다. 모델과 뷰과 완전히 분리될 수 있어, 디자이너와 개발자가 협업하기에도 좋다고한다. 
+
+이 패턴을 카드게임 앱에 적용해보고 싶다. raywenderlich 를 참고해서 공부하기 시작했는데, 나온 예제 프로젝트가 생각보다 복잡해서 아직 시간이 더 필요할 듯 싶다.
+
+<br>
+
+## 정규표현식(Regular Expression) 활용
+
+프로그래머스 카카오 기출문제 [다트 게임](https://programmers.co.kr/learn/courses/30/lessons/17682?language=swift)을 풀어보았다. 뭐 `1D2S#10S` 이런 다트게임 결과 문자열이 들어오면, 조건에 맞게 점수를 계산하는 문제였다. 여기서 `1-10` 숫자는 점수, `S, D, T`  는 다트를 던진 영역, `*, #` 는 보너스 점수 종류를 나타낸다. 나는 이 문제를 정규표현식을 활용해서 풀어보았다.
+
+```swift
+struct Regex {
+    static let score = "[0-9]{1,2}"
+    static let area = "[S|D|T]"
+    static let bonus = "[*|#]"
+    static let turn = "(\(score))(\(area))(\(bonus)?)"
+}
+```
+
+이렇게 정규표현식을 정의해놓고, 이 패턴으로 매칭되는 문자열을 찾는 메소드를 구현했다. 사실 예전에 구현했다는 말이 맞을 것 같다. 거의 [JSONParser 프로젝트](https://github.com/popsmile/swift-jsonparser/blob/popsmile/JSONParser/JSONParser/JSONParser.swift)에서 구현해놓은 메소드를 참고했다. 나름 재사용가능한 코드를 구현했었다는 생각에 조금은 뿌듯했다..ㅎㅎ (스스로 당근 주기)
+
+```swift
+let areaDict: [String: Double] = ["S": 1, "D": 2, "T": 3]
+let bonusDict: [String: Double] = ["*": 2, "#": -1]
+```
+
+그리고 점수 계산 방식의 경우를 구분할 때 switch 문을 사용하지않고, 점수 계산에 필요한 값을 미리 딕셔너리로 구현해놓고 같은 구문에 적용시켰다. 제출 시에 `pow()` 메소드를 인식하지 못해서, `Foundation` 을 임포트해주었다. [풀이 전체 코드](https://github.com/popsmile/algorithm-practice/blob/master/swift/2017KakaoBlindTest/DartGame.swift)
