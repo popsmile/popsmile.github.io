@@ -87,9 +87,9 @@ Image views ignore user events by default. Normally, you use image views only to
 
 <br>
 
- ## Simulator 에러
+## Simulator 에러
 
-```swift
+```
 // Simulator
 Unable to boot device due to insufficient system resources
 ```
