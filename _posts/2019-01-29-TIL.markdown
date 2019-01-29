@@ -73,10 +73,6 @@ class CardView: UIImageView {
 
 ## UIImageView
 
-```
-isUserInteractionEnabled = false 디폴트
-```
-
 `UIView` 를 상속받아 구현했던 `CardStackView` 에 이미지를 추가해야하는 사항이 생겨서, `UIImageView` 를 상속받도록 수정했다. 그런데, 갑자기... 기존의 터치이벤트가 작동하지 않았다. 😱 뭐지 싶었지만, 차분히 공식문서를 찾아보고 구글링도 해보았다. 다행히 원인을 발견했다! 바로 이것.
 
 ```swift
