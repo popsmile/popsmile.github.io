@@ -1,0 +1,107 @@
+---
+layout: post
+title:  "TIL: 2019.01.29"
+date:   2019-01-29 23:59:59
+author: Jamie
+categories: TIL
+tags: MVVM UIImageView
+cover:  "/assets/cover/book-with-magnifier.jpeg"
+---
+
+## MVVM
+
+카드게임 앱에서 카드 객체의 모델과 뷰를 분리한 상태에서 상태를 업데이트해주고 싶어 **View Model**을 중간역할로 생성했다.  `Card` --< `CardViewModel` --< `CardView` 관계로 생성해주었다. 
+
+```swift
+protocol CardViewModelDelegate {
+    init(card: Card)
+    var imageName: String? { get }
+    var imageDidChange: ((CardViewModelDelegate) -> ())? { get set }
+    func flip()
+}
+
+class CardViewModel: CardViewModelDelegate {
+    private let card: Card
+
+    required init(card: Card) {
+        self.card = card
+    }
+
+    var imageName: String? {
+        didSet {
+            imageDidChange?(self)
+        }
+    }
+
+    var imageDidChange: ((CardViewModelDelegate) -> ())?
+
+    func flip() {
+        card.flip()
+        imageName = card.imageName
+    }
+
+}
+```
+
+`CardViewModel` 클래스는 `Card` 모델 객체를 소유하고 있다. 이 뷰 모델은 아래처럼 `CardView` 가 소유하고 있다. 이 때 나름 OCP 원칙을 지켜보고자, 뷰 내부에 뷰 모델도 `CardViewModelDelegate` 타입을 받도록 구현했다. 
+
+뷰 모델이 flip되면, 뷰 모델의 imageName이 카드 객체의 imageName으로 반영된다. 그리고 뷰 모델의 imageName이 didSet되면 아래에서 지정해준 클로저가 호출되고, 이 클로저는 카드 뷰의 이미지를 변경해준다!
+
+```swift
+class CardView: UIImageView {
+
+    var viewModel: CardViewModelDelegate! {
+        didSet {
+            viewModel.imageDidChange = { [unowned self] viewModel in
+                self.setImage(named: viewModel.imageName)
+            }
+        }
+    }
+
+    ...
+    
+    func flip() {
+        viewModel.flip()
+    }
+
+}
+```
+
+요근래 계속해서 아키텍처에 대해서 공부하고 알아보았는데, 코드스쿼드 분들이 해주신 조언을 참고해서 우선은 **뷰를 그리는 로직**과 **비즈니스 로직**을 분리해서 구현하는 연습에 전념해야겠다..!! 오늘 하루 머리를 싸매고 얻어낸 구현방법인데, 어떤 피드백을 받을지는 잘 모르겠다..ㅎㅎ 오늘은 이 [포스트](https://blog.canapio.com/43)를 굉장히 많이 참고해서 공부했다.
+
+<br>
+
+## UIImageView
+
+```
+isUserInteractionEnabled = false 디폴트
+```
+
+`UIView` 를 상속받아 구현했던 `CardStackView` 에 이미지를 추가해야하는 사항이 생겨서, `UIImageView` 를 상속받도록 수정했다. 그런데, 갑자기... 기존의 터치이벤트가 작동하지 않았다. 😱 뭐지 싶었지만, 차분히 공식문서를 찾아보고 구글링도 해보았다. 다행히 원인을 발견했다! 바로 이것.
+
+```swift
+var isUserInteractionEnabled: Bool { get set }
+```
+
+원래 `UIView` 에서는 디폴트가 **True** 인데, `UIImageView` 로 넘어오면 이 프로퍼티가 **False** 로 바뀐다고 한다. [공식문서](https://developer.apple.com/documentation/uikit/uiimageview) 설명을 참고하면, 이미지 뷰는 보통 시각적인 컨텐츠로만 활용하기 때문에 이벤트를 무시하는게 기본 설정이라고 한다.
+
+Image views ignore user events by default. Normally, you use image views only to present visual content in your interface. If you want an image view to handle user interactions as well, change the value of its [isUserInteractionEnabled](https://developer.apple.com/documentation/uikit/uiimageview/1621063-isuserinteractionenabled) property to `true`. 
+
+이 카드게임 앱에서는 이미지 뷰에 터치이벤트가 전해져야하므로 True로 변경해주었다.
+
+<br>
+
+ ## Simulator 에러
+
+```swift
+// Simulator
+Unable to boot device due to insufficient system resources
+```
+
+Xcode와 Simulator를 열심히 돌리다가, 자꾸 Xcode가 계속 꺼지더니 이렇게 Simulator 에러가 발생했다. [스택오버플로우 글](https://stackoverflow.com/questions/46673050/unable-to-boot-device-due-to-insufficient-system-resources-using-xcode-9) 을 참고해서 아래 같이 해결했다. 시스템 실행 프로세스 제한을 늘려주면 된다. 이 변경사항은 재부팅하기 전까지 적용된다고한다. 아래처럼 제한을 늘리면, 시스템이 느려지고 운영체제가 불안정해질 수 있다는 점을 감안해야한다고 한다.
+
+```shell
+// Terminal
+sudo launchctl limit maxproc 2000 2500
+```
+
