@@ -4,7 +4,7 @@ title:  "TIL: 2019.01.29"
 date:   2019-01-29 23:59:59
 author: Jamie
 categories: TIL
-tags: MVVM UIImageView
+tags: MVVM UIImageView Simulator
 cover:  "/assets/cover/book-with-magnifier.jpeg"
 ---
 
