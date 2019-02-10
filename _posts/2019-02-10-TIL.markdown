@@ -8,7 +8,7 @@ tags: ARC ReferenceCycle weak
 cover:  "/assets/cover/kitchen-stove-sink.jpeg"
 ---
 
-어제 [Retain Cycle, ARC, Memory Leak 관련 영상](https://www.youtube.com/watch?v=VcoZJ88d-vM&feature=share) 하나를 보고 잠이 들었다. 이전에 [사진액자 앱 프로젝트](https://github.com/code-squad/swift-photoframe/pull/106) 에서 `IBOutlet` 이 `weak` 으로 연결되는 이유를 찾아본 적이 있다. 전에는 처음 접한 내용이라 이론적으로 이해하고 넘어갔는데, 확실히 같은 내용을 다시 또 보게되니까 더 잘 이해가 되는 것 같다.
+어제 [Retain Cycle, ARC, Memory Leak 관련 영상](https://www.youtube.com/watch?v=VcoZJ88d-vM&feature=share) 하나를 보고 잠이 들었다. 이전에 [사진액자 앱 프로젝트](https://github.com/code-squad/swift-photoframe/pull/106#discussion_r240474776) 에서 `IBOutlet` 이 `weak` 으로 연결되는 이유를 찾아본 적이 있다. 전에는 처음 접한 내용이라 이론적으로 이해하고 넘어갔는데, 확실히 같은 내용을 다시 또 보게되니까 더 잘 이해가 되는 것 같다.
 
 <br>
 
