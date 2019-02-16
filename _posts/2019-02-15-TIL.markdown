@@ -1,0 +1,48 @@
+---
+layout: post
+title:  "TIL: 2019.02.15"
+date:   2019-02-15 23:59:59
+author: Jamie
+categories: TIL
+tags: UIGestureRecognizer UITapGestureRecognizer
+cover:  "/assets/cover/hand-apple-iphone-smartphone.jpeg"
+---
+
+카드게임 앱에서 [Solitare-Klondikek 게임](https://www.solitaire-klondike.com/klondike.html) 동작처럼 특정 카드를 더블 탭 했을 때 매칭되는 위치로 이동할 수 있도록 구현하고자 한다! 카드게임이라고는 원카드밖에 몰랐던 나는... 게임 동작을 이해해보고자 몇 번을 플레이했다는...😅
+
+<br>
+
+## UIGestureRecognizer
+
+제스처 레코그나이저 클래스에는 좀 더 구체적인 제스처를 담당하는 하위 클래스가 있다.
+
+- UI**Tap**GestureRecognizer : 말 그대로 탭 제스처. 여러 번의 탭이나, 여러 손가락으로 하는 탭도 인식 가능하다.
+- UI**Pinch**GestureRecognizer : 두 손가락으로 화면을 확대하거나 축소하는 제스처.
+- UI**Rotation**GestureRecognizer : 두 손가락으로 뷰를 돌리는(회전하는) 제스처.
+- UI**Swipe**GestureRecognizer : 스와이프 제스처. 필요한 터치 수와 방향을 설정해준다.
+- UI**Pan**GestureRecognizer : 드래그 제스처.
+- UI**ScreenEdgePan**GestureRecognizer : 스크린 모서리에서의 드래그 제스처.
+- UI**LongPress**GestureRecognizer : 길게 누르는 제스처.
+
+<br>
+
+## UITapGestureRecognizer
+
+더블 탭 동작을 구현하기위해, [UITapGestureRecognizer](https://developer.apple.com/documentation/uikit/uitapgesturerecognizer)을 상속받는 커스텀 클래스를 만들었다. `numberOfTapsRequired` 프로퍼티는 인식하고자하는 탭의 수를 정의한다.
+
+```swift
+class DoubleTapGestureRecognizer: UITapGestureRecognizer {
+
+    override init(target: Any?, action: Selector?) {
+        super.init(target: target, action: action)
+        numberOfTapsRequired = 2
+    }
+
+}
+```
+
+`CardView` 를 생성하면서 `DoubleTapGestureRecognizer` 를 생성해 `addGestureRecognizer()` 해주었는데, 이 과정에서 알게된 점은 하나의 레코그나이저가 하나의 뷰만 담당한다는 것이다. 동일한 `CardStackView` 에 담긴 카드 뷰에 같은 레코그나이저를 붙여줬을 때, 마지막 뷰만 동작하는 것을 보고 알게되었다.
+
+또한..! 포함관계가 있는 `ImageView` 에서 하위 뷰의 `isUserInteractionEnabled` 프로퍼티를 **True** 로 설정해도, 상위 뷰에서 이 프로퍼티가 False이면 동작하지 않았다.
+
+카드 뷰에 탭 제스처가 일어날 경우, 적절한 노티를 보내도록 구현했다. 이 노티는 뷰 컨트롤러가 관찰하고 있고, 이후의 동작을 처리하도록 추가할 예정이다.
